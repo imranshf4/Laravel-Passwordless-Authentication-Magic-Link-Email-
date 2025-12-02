@@ -2,26 +2,21 @@
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
-    <form method="POST" action="{{ route('login') }}">
+    @if(!session('status'))
+    <form method="POST" action="{{ route('login.send-code') }}" id="email-form">
         @csrf
+
+        <div class="mb-4 text-center">
+            <div class="text-2xl font-bold text-gray-900 dark:text-gray-200">
+                {{ session('status') ? 'Verification code' : 'Login' }}
+            </div>
+        </div>
 
         <!-- Email Address -->
         <div>
             <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
+            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="sesion('email', old('email') )" required autofocus autocomplete="email" />
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
-
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
 
         <!-- Remember Me -->
@@ -40,8 +35,9 @@
             @endif
 
             <x-primary-button class="ms-3">
-                {{ __('Log in') }}
+                {{ __('Send code') }}
             </x-primary-button>
         </div>
     </form>
+    @endif
 </x-guest-layout>
